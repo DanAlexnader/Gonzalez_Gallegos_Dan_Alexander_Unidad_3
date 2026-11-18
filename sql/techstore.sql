@@ -48,3 +48,8 @@ WHERE NOT EXISTS (SELECT 1 FROM productos WHERE nombre='Mouse inalámbrico');
 INSERT INTO productos (nombre,descripcion,precio,stock,icono,activo)
 SELECT 'Bocina Bluetooth','Lleva tu música a todas partes.',499,12,'🔊',1
 WHERE NOT EXISTS (SELECT 1 FROM productos WHERE nombre='Bocina Bluetooth');
+CREATE TABLE IF NOT EXISTS login_limites (
+  clave CHAR(64) PRIMARY KEY,
+  intentos INT NOT NULL DEFAULT 0,
+  bloqueo BIGINT NOT NULL DEFAULT 0
+) ENGINE=InnoDB;

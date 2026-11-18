@@ -6,7 +6,7 @@
    <div class="card-body d-flex flex-column">
      <h5 class="card-title"><?= e($producto['nombre']) ?></h5>
      <p class="card-text"><?= e($producto['descripcion']) ?></p>
-     <p class="precio mt-auto"><?= pesos($producto['precio']) ?></p>
+     <p class="precio mt-auto"><?= pesos($producto['precio']) ?></p><p class="small text-secondary" data-mxn="<?= e($producto['precio']) ?>"></p>
      <p class="small text-muted">Disponibles: <?= (int)$producto['stock'] ?></p>
      <a class="btn btn-outline-secondary mb-2" href="<?= e(url('productos/detalle.php?id=' . (int)$producto['id'])) ?>">Ver detalle</a>
      <form action="<?= e(url('carrito.php')) ?>" method="post">

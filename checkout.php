@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         $pdo->commit();$_SESSION['carrito']=[];ir('pedidos.php?creado='.$pedidoId);
     } catch (Throwable $ex) {
         if (isset($pdo) && $pdo->inTransaction()) $pdo->rollBack();
-        $error=$ex instanceof RuntimeException ? $ex->getMessage() : 'No se pudo registrar el pedido.';
+        $error=$ex instanceof RuntimeException && !($ex instanceof PDOException) ? $ex->getMessage() : 'No se pudo registrar el pedido.';
     }
 }
 $total=array_sum(array_column($items,'subtotal'));

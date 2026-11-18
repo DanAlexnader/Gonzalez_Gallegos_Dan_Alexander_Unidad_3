@@ -9,24 +9,11 @@ if ($id) {
 $error='';
 if ($_SERVER['REQUEST_METHOD']==='POST') {
     verificar_csrf();
-    $nombre=trim((string)($_POST['nombre'] ?? ''));$descripcion=trim((string)($_POST['descripcion'] ?? ''));
-    $precio=filter_var($_POST['precio'] ?? null,FILTER_VALIDATE_FLOAT);
-    $stock=filter_var($_POST['stock'] ?? null,FILTER_VALIDATE_INT);
-    $icono=trim((string)($_POST['icono'] ?? '📦'));
-    $activo=isset($_POST['activo']) ? 1 : 0;
-    $p=compact('nombre','descripcion','precio','stock','icono','activo');
-    if ($nombre==='' || mb_strlen($nombre)>150 || mb_strlen($descripcion)>1000 || mb_strlen($icono)>15 || $precio===false || $precio<0 || $precio>9999999 || $stock===false || $stock<0 || $stock>1000000) {
-        $error='Revisa nombre, descripción, precio, stock e ícono.';
-    } else {
-        if ($id) {
-            $q=db()->prepare('UPDATE productos SET nombre=?,descripcion=?,precio=?,stock=?,icono=?,activo=? WHERE id=?');
-            $q->execute([$nombre,$descripcion,$precio,$stock,$icono,$activo,$id]);
-        } else {
-            $q=db()->prepare('INSERT INTO productos (nombre,descripcion,precio,stock,icono,activo) VALUES (?,?,?,?,?,?)');
-            $q->execute([$nombre,$descripcion,$precio,$stock,$icono,$activo]);
-        }
-        ir('admin/index.php');
-    }
+    require_once __DIR__.'/../models/Producto.php';
+    $p=$_POST; $p['activo']=isset($_POST['activo'])?1:0;
+    try { $data=validar_producto($p); (new Producto(db()))->guardar($data,$id?:null); ir('admin/index.php'); }
+    catch (InvalidArgumentException $ex) { $error=$ex->getMessage(); }
+
 }
 $titulo=($id?'Editar':'Nuevo').' producto | TechStore';require __DIR__ . '/../includes/header.php';
 ?>
